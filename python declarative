@@ -1,0 +1,22 @@
+pipeline {
+    agent {label 'python'} 
+    stages {
+        stage('clone') { 
+            steps {
+                git url:'https://github.com/Microsoft/python-sample-vscode-flask-tutorial' , branch : 'master' 
+            }
+        }
+        stage('install') { 
+            steps {
+                sh """
+                python3 -m pip install --upgrade pip setuptools wheel
+                pip install -r requirements.txt
+                pip install pytest pytest-azurepipelines
+                pip install pytest-cov
+                export "PATH=/home/ubuntu/.local/bin:$PATH"
+                pytest test_test1.py
+                """ 
+            }
+        }
+    }
+}
